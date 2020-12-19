@@ -9,6 +9,9 @@ module.exports = {
   devtool: 'source-map',
   
   mode: 'development',
+  devServer: {
+    contentBase: path.join(process.cwd(), './dist'),
+  },
 
   output: {
 
@@ -23,7 +26,41 @@ module.exports = {
       template: path.join(process.cwd(), './src/public/index.html')
     })
   ],
-  devServer: {
-    contentBase: path.join(process.cwd(), './dist'),
-  }
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include: /src/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+            // 预设：设置babel怎么做兼容性处理
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    //按需加载
+                    useBuiltIns: 'usage',
+                    corejs: {
+                        //指定core-js版本
+                      version: 3,
+                    },
+                    // 指定兼容到那个浏览器版本
+                    targets: {
+                      chrome: '50',
+                      ie: '8',
+                      firefox: '60',
+                      edge: '17',
+                      safari: '10',
+                    },
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
 }
